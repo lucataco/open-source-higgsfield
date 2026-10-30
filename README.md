@@ -1,5 +1,11 @@
 # Body Double
 
+[![Body Double demo: the original take left of the line, the recast right of it](media/body_double_demo.webp)](media/body_double_demo.mp4)
+
+_Left of the line: the original take, a [Mixkit stock clip](https://mixkit.co/free-stock-video/man-breakdancing-452/).
+Right: the same take recast by Body Double as an original fictional character (AI-generated). This is a 15 s preview;
+click it for the full 30 s at 1080p._
+
 [![Body Double explainer (1:59)](media/explainer_poster.jpg)](media/body_double_explainer.mp4)
 
 _GitHub doesn't play mp4 files from a repository inline. Click the poster to open the explainer (1:59, 1080p, with sound)._
@@ -47,8 +53,8 @@ comfy-api-proxy. Example graphs with placeholder file names are in `workflows/ap
 (open in the ComfyUI frontend to inspect). `scripts/export_workflows.py` and `scripts/export_ui_workflows.py`
 regenerate them.
 
-The 30-second, 750-frame demo take (1280×704 follow-cam, 1920×1080 composite) took 85 minutes for its 10 segments
-and 17 minutes to assemble on one NVIDIA DGX Spark (GB10).
+The 30-second, 720-frame demo take (1280×704 follow-cam, 1920×1080 composite) took 80 minutes for its 10 segments
+and 11 minutes to assemble on one NVIDIA DGX Spark (GB10).
 
 ## Quick start
 
@@ -91,7 +97,7 @@ The repository license, [Apache-2.0](LICENSE), covers code and workflow files on
 ## AI-generated content
 
 Body Double's outputs are AI-generated. Keep an AI-generated label on them wherever they are published. The
-explainer carries one.
+demo and the explainer carry one.
 
 ## Content rights
 
