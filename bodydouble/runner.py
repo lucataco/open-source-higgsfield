@@ -409,7 +409,7 @@ def main():
     p.add_argument("--anchor", type=int, default=0)
     p.add_argument("--no-anchor", action="store_true")
     p.add_argument("--cast-view", action="store_true", help="add the letterboxed cast image as an extra reference view")
-    p.add_argument("--cast-edit", help="FLUX.2 Klein instruction applied to the cast before the anchor, e.g. to remove a prop")
+    p.add_argument("--cast-edit", help="FLUX 3 Image Klein instruction applied to the cast before the anchor, e.g. to remove a prop")
     p.add_argument("--props", default="cigarette,phone,microphone",
                    help="held props that stop a take if the references show one or the prompt names one; '' to skip")
     p.add_argument("--take", default="t0")

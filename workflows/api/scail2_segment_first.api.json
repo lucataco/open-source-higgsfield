@@ -39,6 +39,34 @@
   }
  },
  "5": {
+  "class_type": "ModelAttentionBackend",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "attention": "comfy kitchen attention"
+  }
+ },
+ "6": {
+  "class_type": "BlockSparseAttention",
+  "inputs": {
+   "model": [
+    "5",
+    0
+   ],
+   "selection": "sol-attn",
+   "selection.tau": 1.3,
+   "start_percent": 0.2,
+   "end_percent": 1.0,
+   "dense_blocks": "",
+   "min_tokens": 12288,
+   "extra_tokens": 256,
+   "sink_conditioning": "exact_kv_and_rows",
+   "verbose": false
+  }
+ },
+ "7": {
   "class_type": "CLIPLoader",
   "inputs": {
    "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
@@ -46,112 +74,112 @@
    "device": "default"
   }
  },
- "6": {
+ "8": {
   "class_type": "CLIPTextEncode",
   "inputs": {
    "clip": [
-    "5",
+    "7",
     0
    ],
    "text": "the cast, described"
   }
  },
- "7": {
+ "9": {
   "class_type": "CLIPTextEncode",
   "inputs": {
    "clip": [
-    "5",
+    "7",
     0
    ],
    "text": ""
   }
  },
- "8": {
+ "10": {
   "class_type": "VAELoader",
   "inputs": {
    "vae_name": "wan_2.1_vae.safetensors"
   }
  },
- "9": {
+ "11": {
   "class_type": "CLIPVisionLoader",
   "inputs": {
    "clip_name": "clip_vision_h.safetensors"
   }
  },
- "10": {
+ "12": {
   "class_type": "LoadImage",
   "inputs": {
    "image": "ref_cv.png"
   }
  },
- "11": {
+ "13": {
   "class_type": "CLIPVisionEncode",
   "inputs": {
    "clip_vision": [
-    "9",
+    "11",
     0
    ],
    "image": [
-    "10",
+    "12",
     0
    ],
    "crop": "none"
   }
  },
- "12": {
+ "14": {
   "class_type": "LoadVideo",
   "inputs": {
    "file": "c00.mp4"
   }
  },
- "13": {
+ "15": {
   "class_type": "GetVideoComponents",
   "inputs": {
    "video": [
-    "12",
+    "14",
     0
    ]
   }
  },
- "14": {
+ "16": {
   "class_type": "LoadImage",
   "inputs": {
    "image": "ref0.png"
   }
  },
- "15": {
+ "17": {
   "class_type": "LoadImageMask",
   "inputs": {
    "image": "ref0_mask.png",
    "channel": "red"
   }
  },
- "16": {
+ "18": {
   "class_type": "CheckpointLoaderSimple",
   "inputs": {
    "ckpt_name": "sam3.1_multiplex_fp16.safetensors"
   }
  },
- "17": {
+ "19": {
   "class_type": "LoadImageMask",
   "inputs": {
    "image": "init_00.png",
    "channel": "red"
   }
  },
- "18": {
+ "20": {
   "class_type": "SAM3_VideoTrack",
   "inputs": {
    "images": [
-    "13",
+    "15",
     0
    ],
    "model": [
-    "16",
+    "18",
     0
    ],
    "initial_mask": [
-    "17",
+    "19",
     0
    ],
    "detection_threshold": 0.5,
@@ -159,35 +187,35 @@
    "detect_interval": 1
   }
  },
- "19": {
+ "21": {
   "class_type": "SCAIL2ColoredMask",
   "inputs": {
    "driving_track_data": [
-    "18",
+    "20",
     0
    ],
    "object_indices": "",
    "sort_by": "none",
    "replacement_mode": true,
    "ref_track_data": [
-    "15",
+    "17",
     0
    ]
   }
  },
- "20": {
+ "22": {
   "class_type": "WanSCAILToVideo",
   "inputs": {
    "positive": [
-    "6",
+    "8",
     0
    ],
    "negative": [
-    "7",
+    "9",
     0
    ],
    "vae": [
-    "8",
+    "10",
     0
    ],
    "width": 1280,
@@ -200,39 +228,39 @@
    "video_frame_offset": 0,
    "previous_frame_count": 5,
    "pose_video": [
-    "13",
+    "15",
     0
    ],
    "pose_video_mask": [
-    "19",
+    "21",
     0
    ],
    "replacement_mode": true,
    "reference_image": [
-    "14",
+    "16",
     0
    ],
    "reference_image_mask": [
-    "19",
+    "21",
     1
    ],
    "clip_vision_output": [
-    "11",
+    "13",
     0
    ]
   }
  },
- "21": {
+ "23": {
   "class_type": "KSamplerSelect",
   "inputs": {
    "sampler_name": "euler"
   }
  },
- "22": {
+ "24": {
   "class_type": "BasicScheduler",
   "inputs": {
    "model": [
-    "4",
+    "6",
     0
    ],
    "scheduler": "simple",
@@ -240,64 +268,64 @@
    "denoise": 1.0
   }
  },
- "23": {
+ "25": {
   "class_type": "SamplerCustom",
   "inputs": {
    "model": [
-    "4",
+    "6",
     0
    ],
    "add_noise": true,
    "noise_seed": 1,
    "cfg": 1.0,
    "positive": [
-    "20",
-    0
-   ],
-   "negative": [
-    "20",
-    1
-   ],
-   "sampler": [
-    "21",
-    0
-   ],
-   "sigmas": [
     "22",
     0
    ],
+   "negative": [
+    "22",
+    1
+   ],
+   "sampler": [
+    "23",
+    0
+   ],
+   "sigmas": [
+    "24",
+    0
+   ],
    "latent_image": [
-    "20",
+    "22",
     2
    ]
   }
  },
- "24": {
+ "26": {
   "class_type": "VAEDecode",
   "inputs": {
    "samples": [
-    "23",
+    "25",
     0
    ],
    "vae": [
-    "8",
+    "10",
     0
    ]
   }
  },
- "25": {
+ "27": {
   "class_type": "SAM3_VideoTrack",
   "inputs": {
    "images": [
-    "24",
+    "26",
     0
    ],
    "model": [
-    "16",
+    "18",
     0
    ],
    "initial_mask": [
-    "17",
+    "19",
     0
    ],
    "detection_threshold": 0.5,
@@ -305,30 +333,11 @@
    "detect_interval": 1
   }
  },
- "26": {
-  "class_type": "SAM3_TrackToMask",
-  "inputs": {
-   "track_data": [
-    "18",
-    0
-   ],
-   "object_indices": "0"
-  }
- },
- "27": {
-  "class_type": "MaskToImage",
-  "inputs": {
-   "mask": [
-    "26",
-    0
-   ]
-  }
- },
  "28": {
   "class_type": "SAM3_TrackToMask",
   "inputs": {
    "track_data": [
-    "25",
+    "20",
     0
    ],
    "object_indices": "0"
@@ -344,40 +353,59 @@
   }
  },
  "30": {
-  "class_type": "SaveImage",
+  "class_type": "SAM3_TrackToMask",
   "inputs": {
-   "images": [
-    "24",
-    0
-   ],
-   "filename_prefix": "bodydouble/example/t0/seg00/f"
-  }
- },
- "31": {
-  "class_type": "SaveImage",
-  "inputs": {
-   "images": [
+   "track_data": [
     "27",
     0
    ],
-   "filename_prefix": "bodydouble/example/t0/seg00/src_mask"
+   "object_indices": "0"
+  }
+ },
+ "31": {
+  "class_type": "MaskToImage",
+  "inputs": {
+   "mask": [
+    "30",
+    0
+   ]
   }
  },
  "32": {
   "class_type": "SaveImage",
   "inputs": {
    "images": [
-    "29",
+    "26",
     0
    ],
-   "filename_prefix": "bodydouble/example/t0/seg00/cast_mask"
+   "filename_prefix": "bodydouble/example/t0/seg00/f"
   }
  },
  "33": {
   "class_type": "SaveImage",
   "inputs": {
    "images": [
-    "19",
+    "29",
+    0
+   ],
+   "filename_prefix": "bodydouble/example/t0/seg00/src_mask"
+  }
+ },
+ "34": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "31",
+    0
+   ],
+   "filename_prefix": "bodydouble/example/t0/seg00/cast_mask"
+  }
+ },
+ "35": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "21",
     1
    ],
    "filename_prefix": "bodydouble/example/t0/seg00/ref_mask"

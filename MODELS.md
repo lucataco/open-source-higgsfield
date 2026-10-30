@@ -3,6 +3,9 @@
 Weights are downloaded from their official upstreams by `setup.sh` and are never redistributed here. The repository
 license (Apache-2.0) covers code and workflow files only.
 
+FLUX 3 Image Klein's FLUX Kommunity License allows non-commercial use, and commercial use only for qualifying users
+under its revenue cap; read it on the model page before using outputs commercially.
+
 | Role | File (ComfyUI folder) | Source | License |
 |---|---|---|---|
 | Video core | `wan2.1_14B_SCAIL_2_int8_convrot` (diffusion_models) | Comfy-Org/SCAIL-2 | MIT |
@@ -13,8 +16,8 @@ license (Apache-2.0) covers code and workflow files only.
 | CLIP vision | `clip_vision_h` (clip_vision) | Comfy-Org/Wan_2.1_ComfyUI_repackaged | Apache-2.0 |
 | Video VAE | `wan_2.1_vae` (vae) | Comfy-Org/Wan_2.1_ComfyUI_repackaged | Apache-2.0 |
 | Masks and tracking | `sam3.1_multiplex_fp16` (checkpoints) | Comfy-Org/sam3.1 | SAM License (Meta) |
-| First-frame anchor | `flux-2-klein-4b-fp8` (diffusion_models) | black-forest-labs/FLUX.2-klein-4b-fp8 | Apache-2.0 |
-| Klein text encoder | `qwen_3_4b` (text_encoders) | Comfy-Org/flux2-klein | Apache-2.0 |
+| First-frame anchor | `flux3-image-klein-int8-convrot` (diffusion_models) | black-forest-labs/flux-3-image-klein-comfy (gated) | FLUX Kommunity License v1.0 |
+| Klein text encoder | `qwen3vl_4b_int8_convrot` (text_encoders) | black-forest-labs/flux-3-image-klein-comfy (gated) | FLUX Kommunity License v1.0 |
 | Klein VAE | `flux2-vae` (vae) | Comfy-Org/flux2-klein | Apache-2.0 |
 
 Tools: comfy-sdk and comfy-api-proxy (MIT), ComfyUI (GPL-3.0, called over HTTP, not vendored), ffmpeg, PyAV, numpy, Pillow.

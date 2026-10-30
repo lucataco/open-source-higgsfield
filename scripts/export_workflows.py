@@ -8,7 +8,7 @@ OUT = Path(__file__).resolve().parent.parent / "workflows/api"
 EXAMPLES = {
     "detect_sam31": graphs.detect("frame0.png", "bodydouble/example/detect/m", text="person:10"),
     "track_sam31": graphs.track("track_proxy.mp4", "init_mask.png", "bodydouble/example/track/m"),
-    "anchor_klein4b_edit": graphs.anchor("anchor_in.png", "cast.png", 1344, 768, 1, "bodydouble/example/anchor/a"),
+    "anchor_flux3_klein_edit": graphs.anchor("anchor_in.png", "cast.png", 1344, 768, 1, "bodydouble/example/anchor/a"),
     "scail2_segment_first": graphs.segment("c00.mp4", 81, 1280, 704, ["ref0.png"], ["ref0_mask.png"], "ref_cv.png", "init_00.png",
                                            None, "the cast, described", 1, "bodydouble/example/t0/seg00", save_handoff=False,
                                            save_ref_mask=True),

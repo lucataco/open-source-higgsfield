@@ -3,6 +3,7 @@
 Input files are paths relative to ComfyUI/input/, or annotated '... [output]' paths for files a previous job saved.
 """
 import json
+import math
 
 SAM = "sam3.1_multiplex_fp16.safetensors"
 
@@ -24,10 +25,11 @@ SCAIL = {
 }
 
 KLEIN = {
-    "unet": "flux-2-klein-4b-fp8.safetensors",
-    "te": "qwen_3_4b.safetensors",
+    "unet": "flux3-image-klein-int8-convrot.safetensors",
+    "te": "qwen3vl_4b_int8_convrot.safetensors",
     "vae": "flux2-vae.safetensors",
-    "steps": 4,
+    "steps": 16,
+    "shift": math.log(16),  # as in BFL's FLUX 3 Klein ComfyUI workflows
 }
 
 ANCHOR_PROMPT = ("Replace the person in image 1 with the character from image 2, including their face, hair, body and "
@@ -103,26 +105,23 @@ def props(images, names, prefix, threshold=0.7):
 
 
 def anchor(crop, cast, width, height, seed, prefix, prompt=ANCHOR_PROMPT, batch=4):
-    """FLUX.2 Klein 4B two-image edit: the person in `crop` becomes the character in `cast`. Sizes are multiples of 16."""
+    """FLUX 3 Image Klein two-image edit: the person in `crop` becomes the character in `cast`. Sizes are multiples of 16."""
     return edit([crop, cast], prompt, width, height, seed, prefix, batch)
 
 
 def edit(images, prompt, width, height, seed, prefix, batch=1):
-    """FLUX.2 Klein 4B edit; `prompt` calls the inputs image 1, image 2, ... Sizes are multiples of 16."""
+    """FLUX 3 Image Klein edit; `prompt` calls the inputs image 1, image 2, ... Sizes are multiples of 16."""
     g = Graph()
     unet = g.add("UNETLoader", unet_name=KLEIN["unet"], weight_dtype="default")
-    clip = g.add("CLIPLoader", clip_name=KLEIN["te"], type="flux2", device="default")
+    model = g.add("ModelSamplingFlux", model=[unet, 0], max_shift=KLEIN["shift"], base_shift=KLEIN["shift"], width=1024, height=1024)
+    clip = g.add("CLIPLoader", clip_name=KLEIN["te"], type="flux3", device="default")
     vae = g.add("VAELoader", vae_name=KLEIN["vae"])
-    text = g.add("CLIPTextEncode", clip=[clip, 0], text=prompt)
-    pos, neg = [text, 0], [g.add("ConditioningZeroOut", conditioning=[text, 0]), 0]
-    for f in images:
-        lat = [g.add("VAEEncode", pixels=[g.add("LoadImage", image=f), 0], vae=[vae, 0]), 0]
-        pos = [g.add("ReferenceLatent", conditioning=pos, latent=lat), 0]
-        neg = [g.add("ReferenceLatent", conditioning=neg, latent=lat), 0]
-    guider = g.add("CFGGuider", model=[unet, 0], positive=pos, negative=neg, cfg=1.0)
-    sample = g.add("SamplerCustomAdvanced", noise=[g.add("RandomNoise", noise_seed=seed), 0], guider=[guider, 0],
-                   sampler=[g.add("KSamplerSelect", sampler_name="euler"), 0],
-                   sigmas=[g.add("Flux2Scheduler", steps=KLEIN["steps"], width=width, height=height), 0],
+    refs = g.add("ReferenceMultiLatent", positive=[g.add("CLIPTextEncode", clip=[clip, 0], text=prompt), 0], vae=[vae, 0],
+                 resolution="resize", **{"resolution.megapixels": 1.0},
+                 **{f"images.image{i}": [g.add("LoadImage", image=f), 0] for i, f in enumerate(images)})
+    # cfg 1 never evaluates the negative; ReferenceMultiLatent returns the positive there
+    sample = g.add("KSampler", model=[model, 0], positive=[refs, 0], negative=[refs, 1], seed=seed, steps=KLEIN["steps"], cfg=1.0,
+                   sampler_name="euler", scheduler="simple", denoise=1.0,
                    latent_image=[g.add("EmptyFlux2LatentImage", width=width, height=height, batch_size=batch), 0])
     g.add("SaveImage", images=[g.add("VAEDecode", samples=[sample, 0], vae=[vae, 0]), 0], filename_prefix=prefix)
     return g

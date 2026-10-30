@@ -14,14 +14,6 @@ the challenge entry.
 
 ## Rules applied
 
-- Only footage and characters we own or have explicit permission to use are eligible for the public demo and
-  submission. If a basis above is wrong, stop and swap the plate/cast before publishing — do not ship an
-  ambiguous entry.
 - Outputs are AI-generated and must carry an AI-generated label wherever they are published (see NOTICE).
 - The app itself enforces no telemetry and makes no outbound requests; content licensing is the operator's
   responsibility when they run it on their own media.
-
-## Before making this repository public
-
-The explainer still shows the STORM plate. Rebuild it on the breakdance take (or another cleared plate), or
-confirm the STORM rights in writing, and update this table in the same commit.
