@@ -1,0 +1,226 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "flux-2-klein-4b-fp8.safetensors",
+   "weight_dtype": "default"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "flux2",
+   "device": "default"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "flux2-vae.safetensors"
+  }
+ },
+ "4": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "clip": [
+    "2",
+    0
+   ],
+   "text": "Replace the person in image 1 with the character from image 2, including their face, hair, body and complete outfit exactly as shown in image 2. Do not keep any of the original person's clothing. Keep image 1's pose, framing, background and lighting."
+  }
+ },
+ "5": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "4",
+    0
+   ]
+  }
+ },
+ "6": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "anchor_in.png"
+  }
+ },
+ "7": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "6",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  }
+ },
+ "8": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "4",
+    0
+   ],
+   "latent": [
+    "7",
+    0
+   ]
+  }
+ },
+ "9": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "5",
+    0
+   ],
+   "latent": [
+    "7",
+    0
+   ]
+  }
+ },
+ "10": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "cast.png"
+  }
+ },
+ "11": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "10",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  }
+ },
+ "12": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "8",
+    0
+   ],
+   "latent": [
+    "11",
+    0
+   ]
+  }
+ },
+ "13": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "9",
+    0
+   ],
+   "latent": [
+    "11",
+    0
+   ]
+  }
+ },
+ "14": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "12",
+    0
+   ],
+   "negative": [
+    "13",
+    0
+   ],
+   "cfg": 1.0
+  }
+ },
+ "15": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 1
+  }
+ },
+ "16": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  }
+ },
+ "17": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 1344,
+   "height": 768
+  }
+ },
+ "18": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 1344,
+   "height": 768,
+   "batch_size": 4
+  }
+ },
+ "19": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "15",
+    0
+   ],
+   "guider": [
+    "14",
+    0
+   ],
+   "sampler": [
+    "16",
+    0
+   ],
+   "sigmas": [
+    "17",
+    0
+   ],
+   "latent_image": [
+    "18",
+    0
+   ]
+  }
+ },
+ "20": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "19",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  }
+ },
+ "21": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "20",
+    0
+   ],
+   "filename_prefix": "bodydouble/example/anchor/a"
+  }
+ }
+}

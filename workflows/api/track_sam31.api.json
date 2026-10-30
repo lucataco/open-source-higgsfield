@@ -1,0 +1,79 @@
+{
+ "1": {
+  "class_type": "LoadVideo",
+  "inputs": {
+   "file": "track_proxy.mp4"
+  }
+ },
+ "2": {
+  "class_type": "GetVideoComponents",
+  "inputs": {
+   "video": [
+    "1",
+    0
+   ]
+  }
+ },
+ "3": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "sam3.1_multiplex_fp16.safetensors"
+  }
+ },
+ "4": {
+  "class_type": "LoadImageMask",
+  "inputs": {
+   "image": "init_mask.png",
+   "channel": "red"
+  }
+ },
+ "5": {
+  "class_type": "SAM3_VideoTrack",
+  "inputs": {
+   "images": [
+    "2",
+    0
+   ],
+   "model": [
+    "3",
+    0
+   ],
+   "initial_mask": [
+    "4",
+    0
+   ],
+   "detection_threshold": 0.5,
+   "max_objects": 1,
+   "detect_interval": 1
+  }
+ },
+ "6": {
+  "class_type": "SAM3_TrackToMask",
+  "inputs": {
+   "track_data": [
+    "5",
+    0
+   ],
+   "object_indices": "0"
+  }
+ },
+ "7": {
+  "class_type": "MaskToImage",
+  "inputs": {
+   "mask": [
+    "6",
+    0
+   ]
+  }
+ },
+ "8": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "7",
+    0
+   ],
+   "filename_prefix": "bodydouble/example/track/m"
+  }
+ }
+}

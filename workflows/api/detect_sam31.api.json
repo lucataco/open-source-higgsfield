@@ -1,0 +1,63 @@
+{
+ "1": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "frame0.png"
+  }
+ },
+ "2": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "sam3.1_multiplex_fp16.safetensors"
+  }
+ },
+ "3": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "clip": [
+    "2",
+    1
+   ],
+   "text": "person:10"
+  }
+ },
+ "4": {
+  "class_type": "SAM3_Detect",
+  "inputs": {
+   "model": [
+    "2",
+    0
+   ],
+   "image": [
+    "1",
+    0
+   ],
+   "threshold": 0.5,
+   "refine_iterations": 2,
+   "individual_masks": true,
+   "conditioning": [
+    "3",
+    0
+   ]
+  }
+ },
+ "5": {
+  "class_type": "MaskToImage",
+  "inputs": {
+   "mask": [
+    "4",
+    0
+   ]
+  }
+ },
+ "6": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "5",
+    0
+   ],
+   "filename_prefix": "bodydouble/example/detect/m"
+  }
+ }
+}
