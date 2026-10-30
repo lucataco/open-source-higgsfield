@@ -1,0 +1,16 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv venv -p 3.12 .venv && uv pip install -p .venv -e '.[test]'
+      - run: .venv/bin/python -m pytest -q
+      - run: for f in setup.sh run.sh scripts/download_models.sh; do bash -n "$f"; done

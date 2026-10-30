@@ -33,9 +33,6 @@ __pycache__/
 *.jpg
 *.jpeg
 !media/**
-explainer/vo/
-explainer/music/
-explainer/stills/
 
 # OS and editor files
 .DS_Store

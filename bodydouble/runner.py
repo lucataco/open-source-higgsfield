@@ -209,7 +209,8 @@ def anchor(job, a):
     if a.cast_edit:
         outs = job.run(graphs.edit([cast_name], a.cast_edit, cw, ch, a.seed, f"{job.rel}/cast_edit/c"), "cast_edit", "klein")
         cast_name = job.stage("cast_edit.png", Image.open(out_path(files(outs, "c")[0])).convert("RGB"))
-    outs = job.run(graphs.anchor(crop_name, cast_name, ew, eh, a.seed, f"{job.rel}/anchor_{key}/a", batch=a.anchors), "anchor", "klein")
+    outs = job.run(graphs.anchor(crop_name, cast_name, ew, eh, a.seed, f"{job.rel}/anchor_{key}/a", a.anchor_prompt, a.anchors), "anchor",
+                   "klein")
     paths = []
     adir = job.dir / f"anchors_{key}"
     adir.mkdir(exist_ok=True)
@@ -408,6 +409,8 @@ def main():
     p.add_argument("--anchors", type=int, default=4)
     p.add_argument("--anchor", type=int, default=0)
     p.add_argument("--no-anchor", action="store_true")
+    p.add_argument("--anchor-prompt", default=graphs.ANCHOR_PROMPT,
+                   help="FLUX 3 Image Klein instruction for the anchor; with several people in frame 0, say which one to replace")
     p.add_argument("--cast-view", action="store_true", help="add the letterboxed cast image as an extra reference view")
     p.add_argument("--cast-edit", help="FLUX 3 Image Klein instruction applied to the cast before the anchor, e.g. to remove a prop")
     p.add_argument("--props", default="cigarette,phone,microphone",
